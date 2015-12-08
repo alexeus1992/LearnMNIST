@@ -24,21 +24,40 @@ learnModel <- function(data,labels){
     numbers_count <- 10
     m <- nrow(X)
     n <- ncol(X)
-    theta <- matrix(data=0,nrow=numbers_count,ncol=n+1)
-    initial_theta <- matrix(data=0,nrow=1,ncol=n+1)
+    thetas <- matrix(data=0,nrow=numbers_count,ncol=n+1)
+    
     X <- cbind(1,X)
-    lambda <- 0.1
+    
     
     for(i in 1:numebrs_count){
-        print(i)
-        
+        print(i)        
         
     }
 }
-learnNumber <- function(){
-    term = 0.00001 #termination condition
-    lambda <- 0;
-    mu <- 0.01;
+learnNumber <- function(data,labels){
+  
+  X <- data
+  y <- labels  
+  m <- nrow(X)
+  n <- ncol(X)
+  
+  theta <- matrix(data=0,nrow=1,ncol=n+1)
+  lambda <- 0.0  # regularization of trade-off.
+  mu <- 0.1 # learning rate
+  term <- 0.0001 #Termination of the learning
+  
+  while (abs(prevJ-J) > term) {    
+    
+    
+    #add up the regularization term
+    delta <- delta/nData 
+    delta[-1] <- delta[-1] + lambda*theta[-1]
+    #update theta
+    theta <- theta - mu*delta
+    prevJ <- J;
+    J <- error;  
+  }
+  
 }
 # train a model
 classifier <- learnModel(data = trainData, labels = trainLabels)
