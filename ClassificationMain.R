@@ -1,7 +1,7 @@
 # This sciprt file contains a frame for learning handwritten digitals from the MNIST dataset
 
 # load training data from files
-data <- loadMNISTData("C:\\Users\\User\\YandexDisk\\teaching\\advanced_topics_in_machine_learning\\train-images.idx3-ubyte", "C:\\Users\\User\\YandexDisk\\teaching\\advanced_topics_in_machine_learning\\train-labels.idx1-ubyte")
+data <- loadMNISTData("D:/R/mnist/train-images.idx3-ubyte", "D:/R/mnist/train-labels.idx1-ubyte")
 trainLabels <- data$labels
 trainData <- data$data
 
@@ -11,13 +11,39 @@ print(dim(trainLabels))
 # trainingLabels should have 60000x1, one class label \in {0,1,...9} for each data.
 
 #uncomment the following 3 lines to see the nth training example and its class label.
-# n = 10;
-# image( t(matrix(trainData[n, ], ncol=28, nrow=28)), Rowv=28, Colv=28, col = heat.colors(256),  margins=c(5,10))
-# print("Class label:"); print(trainLabels[n])
+#n = 10;
+#image( t(matrix(trainData[n, ], ncol=28, nrow=28)), Rowv=28, Colv=28, col = heat.colors(256),  margins=c(5,10))
+#print("Class label:"); print(trainLabels[n])
 
+sigmoid <- function(h){
+    return 1/(1+exp(-h));
+}
+learnModel <- function(data,labels){
+    X <- data
+    y <- labels
+    numbers_count <- 10
+    m <- nrow(X)
+    n <- ncol(X)
+    theta <- matrix(data=0,nrow=numbers_count,ncol=n+1)
+    initial_theta <- matrix(data=0,nrow=1,ncol=n+1)
+    X <- cbind(1,X)
+    lambda <- 0.1
+    
+    for(i in 1:numebrs_count){
+        print(i)
+        
+        
+    }
+}
+learnNumber <- function(){
+    term = 0.00001 #termination condition
+    lambda <- 0;
+    mu <- 0.01;
+}
 # train a model
 classifier <- learnModel(data = trainData, labels = trainLabels)
 predictedLabels <- testModel(classifier, trainData)
+
 
 #calculate accuracy on training data
 print("accuracy on training data:\t")
@@ -28,7 +54,7 @@ print(sum(predictedLabels == trainLabels)/length(trainLabels))
 
 
 # test the model
-data <- loadMNISTData("C:\\Users\\User\\YandexDisk\\teaching\\advanced_topics_in_machine_learning\\t10k-images.idx3-ubyte", "C:\\Users\\User\\YandexDisk\\teaching\\advanced_topics_in_machine_learning\\t10k-labels.idx1-ubyte")
+#data <- loadMNISTData("D:/R/mnist/t10k-images.idx3-ubyte", "D:/R/mnist/t10k-labels.idx1-ubyte")
 testLabels <- data$labels
 testData <- data$data
 
@@ -39,9 +65,12 @@ print(dim(testLabels))
 
 predictedLabels <- testModel(classifier, testData)
 
+#1nn
+
 #calculate accuracy
 print("accuracy on test data:\t")
 print(sum(predictedLabels == testLabels)/length(testLabels))
 
 #calculate the following error metric for each class obtained on the test data:
 #Recall, precision, specificity, F-measure, FDR and ROC for each class separately. Use a package for ROC. 
+
