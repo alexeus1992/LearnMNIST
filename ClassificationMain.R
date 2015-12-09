@@ -18,6 +18,7 @@ print(dim(trainLabels))
 sigmoid <- function(h){
     return 1/(1+exp(-h));
 }
+
 learnModel <- function(data,labels){
     X <- data
     y <- labels
@@ -25,15 +26,19 @@ learnModel <- function(data,labels){
     m <- nrow(X)
     n <- ncol(X)
     thetas <- matrix(data=0,nrow=numbers_count,ncol=n+1)
-    
+    X <- X/255
     X <- cbind(1,X)
     
     
-    for(i in 1:numebrs_count){
+    for(i in 0:numebrs_count-1){
         print(i)        
-        
+        normY <- as.numeric(y==i) 
+        theta <- learnNumber(X,normY)
+        thetas[i+1,] <- theta
     }
+    return (thetas)
 }
+learnModel(trainData,trainLabels)
 learnNumber <- function(data,labels){
   
   X <- data
@@ -45,19 +50,21 @@ learnNumber <- function(data,labels){
   lambda <- 0.0  # regularization of trade-off.
   mu <- 0.1 # learning rate
   term <- 0.0001 #Termination of the learning
+  prevJ <-0 #previous error
+  J <- term + 1 #actual error
   
   while (abs(prevJ-J) > term) {    
     
-    
-    #add up the regularization term
-    delta <- delta/nData 
-    delta[-1] <- delta[-1] + lambda*theta[-1]
-    #update theta
+    g <- sigmoid(X%*%theta)
+    delta <- t(X)%*%(g-y)
+    delta[-1] <- delta[-1] - 2*mu*lambda*theta[-1]      
     theta <- theta - mu*delta
-    prevJ <- J;
-    J <- error;  
+    error <- sum(-y*log(g)-(1-y)*log(1-g))/m + lambda*sum((theta[-1])^2)
+    print(error)
+    prevJ <- J
+    J <- error  
   }
-  
+  return (theta)
 }
 # train a model
 classifier <- learnModel(data = trainData, labels = trainLabels)
