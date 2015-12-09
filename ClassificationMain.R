@@ -16,7 +16,7 @@ print(dim(trainLabels))
 #print("Class label:"); print(trainLabels[n])
 
 sigmoid <- function(h){
-    return 1/(1+exp(-h));
+    return (1/(1+exp(-h)));
 }
 
 learnModel <- function(data,labels){
@@ -46,24 +46,29 @@ learnNumber <- function(data,labels){
   m <- nrow(X)
   n <- ncol(X)
   
-  theta <- matrix(data=0,nrow=1,ncol=n+1)
+  theta <- matrix(runif(n, -100, 100),ncol=1,nrow=n)
   lambda <- 0.0  # regularization of trade-off.
+  lambda <- 0.001
   mu <- 0.1 # learning rate
   term <- 0.0001 #Termination of the learning
   prevJ <-0 #previous error
   J <- term + 1 #actual error
-  
-  while (abs(prevJ-J) > term) {    
+  j <- 0
+  while (abs(prevJ-J) > term) {  
     
     g <- sigmoid(X%*%theta)
     delta <- t(X)%*%(g-y)
     delta[-1] <- delta[-1] - 2*mu*lambda*theta[-1]      
     theta <- theta - mu*delta
-    error <- sum(-y*log(g)-(1-y)*log(1-g))/m + lambda*sum((theta[-1])^2)
-    print(error)
+    error1 <- sum(-y*log(g+ 0.0000001)-(1-y)*log(1-g+ 0.0000001))
+    error2<-lambda*sum((theta[-1])^2)
+    error <- (error1 + error2)/m
+    accuracy <- sum(g == y) / m
+    print(sprintf("errors: %f , %f", error1, error2))
+    print(sprintf("%f , %f", error, accuracy))
+    
     prevJ <- J
     J <- error  
-  }
   return (theta)
 }
 # train a model
