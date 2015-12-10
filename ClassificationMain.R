@@ -33,94 +33,94 @@ learnModel <- function(data,labels){
     X <- cbind(1,X)   
     #for each number calculate coefficients
     for(i in 0:(numbers_count-1)){
-      cat("-------------------------------------------------------------------",i)          
-      normY <- as.numeric(y==i) 
-      theta <- learnNumber(X,normY)
-      thetas[,i+1] <- theta
+        cat("------------------------------------------------------------------->",i,'\n')          
+        normY <- as.numeric(y==i) 
+        theta <- learnNumber(X,normY)
+        thetas[,i+1] <- theta
     }
     return (thetas)
 }
 #get theta vector for one number classifier
 learnNumber <- function(data,labels){
-  
-  #parameters initialisation
-  X <- data
-  y <- labels  
-  m <- nrow(X)
-  n <- ncol(X)  
-  theta <- matrix(runif(n, -100, 100),ncol=1,nrow=n)
-  lambda <- 0.0  # regularization of trade-off.
-  lambda <- 0.001
-  mu <- 0.1 # learning rate
-  term <- 0.001 #termination of the learning
-  prevJ <-0 #previous error
-  J <- term + 1 #actual error
-  
-  while (abs(prevJ-J) > term) {      
-    g <- sigmoid(X%*%theta)
-    delta <- t(X)%*%(g-y)
-    delta[-1] <- delta[-1] - 2*mu*lambda*theta[-1]      
-    #updating coefficients
-    theta <- theta - mu*delta
-    #error calculation
-    error1 <- sum(-y*log(g+ 0.0000001)-(1-y)*log(1-g+ 0.0000001))
-    error2<-lambda*sum((theta[-1])^2)
-    error <- (error1 + error2)/m
-    #for test purposes calculating accuracy
-    accuracy <- sum(g == y) / m
-    #print(sprintf("errors: %f , %f", error1, error2))
-    #print(sprintf("%f , %f", error, accuracy))
     
-    prevJ <- J
-    J <- error  
-  }
-  return (theta)
+    #parameters initialisation
+    X <- data
+    y <- labels  
+    m <- nrow(X)
+    n <- ncol(X)  
+    theta <- matrix(runif(n, -100, 100),ncol=1,nrow=n)
+    lambda <- 0.0  # regularization of trade-off.
+    lambda <- 0.001
+    mu <- 0.1 # learning rate
+    term <- 0.001 #termination of the learning
+    prevJ <-0 #previous error
+    J <- term + 1 #actual error
+    
+    while (abs(prevJ-J) > term) {      
+        g <- sigmoid(X%*%theta)
+        delta <- t(X)%*%(g-y)
+        delta[-1] <- delta[-1] - 2*mu*lambda*theta[-1]      
+        #updating coefficients
+        theta <- theta - mu*delta
+        #error calculation
+        error1 <- sum(-y*log(g+ 0.0000001)-(1-y)*log(1-g+ 0.0000001))
+        error2<-lambda*sum((theta[-1])^2)
+        error <- (error1 + error2)/m
+        #for test purposes calculating accuracy
+        accuracy <- sum(g == y) / m
+        #print(sprintf("errors: %f , %f", error1, error2))
+        #print(sprintf("%f , %f", error, accuracy))
+        
+        prevJ <- J
+        J <- error  
+    }
+    return (theta)
 }
 # make predictions based on coefficients
 testModel <- function(thetas,trainData){ 
-  #normalizing data
-  X <- trainData
-  X <- X / 255.0 
-  X <- cbind(1, X)
-  m <- nrow(X)
-  n <- ncol(X)
-  #applying theta coefficients to data and calculating function value
-  g <- sigmoid(X %*% thetas)  
-  prediction <- matrix(nrow = m, ncol = 1)
-  #for each number choosing prediction with max probability
-  for(i in 1:m){
-    number <- which.max(g[i,])
-    prediction[i] <- number-1
-  }
-  return (prediction)
+    #normalizing data
+    X <- trainData
+    X <- X / 255.0 
+    X <- cbind(1, X)
+    m <- nrow(X)
+    n <- ncol(X)
+    #applying theta coefficients to data and calculating function value
+    g <- sigmoid(X %*% thetas)  
+    prediction <- matrix(nrow = m, ncol = 1)
+    #for each number choosing prediction with max probability
+    for(i in 1:m){
+        number <- which.max(g[i,])
+        prediction[i] <- number-1
+    }
+    return (prediction)
 }
 #Recall, precision, specificity, F-measure, FDR and plot ROC curve
 printErrorMetrics <- function(predictedLabels,realLabels){
-  numbers_count <- 10
-  tp <- numeric(numbers_count) #true positive
-  fp <- numeric(numbers_count) #false positive
-  tn <- numeric(numbers_count) #true negative
-  fn <- numeric(numbers_count) #false negative
-  #calculating errors
-  for(i in 0:(numbers_count-1)){    
-    tp[i+1] <- sum ((predictedLabels == i) & (realLabels == i))
-    fp[i+1] <- sum ((predictedLabels == i) & (realLabels != i))
-    tn[i+1] <- sum ((predictedLabels != i) & (realLabels != i))
-    fn[i+1] <- sum ((predictedLabels != i) & (realLabels == i))
-    plot(roc(as.numeric(predictedLabels == i),as.numeric(realLabels == i)))
-  }
-  #calculating metrics
-  recall <- tp / (tp + fn)
-  precision <- tp / (tp + fp)
-  specificity <- tn / (tn + fp)
-  f_measure <- 2 * tp / (2 * tp + fn + fp)
-  fdr <- fp / (fp + tp)
-  #printing metrics
-  cat('Recall: ', recall)
-  cat('Precision:', precision)
-  cat('Specificity: ', specificity)
-  cat('F-measure: ', f_measure)
-  cat('FDR: ', fdr)
+    numbers_count <- 10
+    tp <- numeric(numbers_count) #true positive
+    fp <- numeric(numbers_count) #false positive
+    tn <- numeric(numbers_count) #true negative
+    fn <- numeric(numbers_count) #false negative
+    #calculating errors
+    for(i in 0:(numbers_count-1)){    
+        tp[i+1] <- sum ((predictedLabels == i) & (realLabels == i))
+        fp[i+1] <- sum ((predictedLabels == i) & (realLabels != i))
+        tn[i+1] <- sum ((predictedLabels != i) & (realLabels != i))
+        fn[i+1] <- sum ((predictedLabels != i) & (realLabels == i))
+        plot(roc(as.numeric(predictedLabels == i),as.numeric(realLabels == i)))
+    }
+    #calculating metrics
+    recall <- tp / (tp + fn)
+    precision <- tp / (tp + fp)
+    specificity <- tn / (tn + fp)
+    f_measure <- 2 * tp / (2 * tp + fn + fp)
+    fdr <- fp / (fp + tp)
+    #printing metrics
+    cat('Recall: ', recall,'\n')
+    cat('Precision:', precision,'\n')
+    cat('Specificity: ', specificity,'\n')
+    cat('F-measure: ', f_measure,'\n')
+    cat('FDR: ', fdr,'\n')
 }
 # train a model
 classifier <- learnModel(data = trainData, labels = trainLabels)
