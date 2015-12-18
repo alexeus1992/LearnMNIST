@@ -2,7 +2,8 @@ library(pROC)
 # This sciprt file contains a frame for learning handwritten digitals from the MNIST dataset
 
 # load training data from files
-data <- loadMNISTData("D:/R/mnist/train-images.idx3-ubyte", "D:/R/mnist/train-labels.idx1-ubyte")
+#data <- loadMNISTData("D:/R/mnist/train-images.idx3-ubyte", "D:/R/mnist/train-labels.idx1-ubyte")
+data <- loadMNISTData("C:/analytics/train-images.idx3-ubyte", "C:/analytics/train-labels.idx1-ubyte")
 trainLabels <- data$labels
 trainData <- data$data
 
@@ -59,7 +60,8 @@ learnNumber <- function(data,labels){
     while (abs(prevJ-J) > term) {      
         g <- sigmoid(X%*%theta)
         delta <- t(X)%*%(g-y)
-        delta[-1] <- delta[-1] - 2*mu*lambda*theta[-1]      
+        #delta[-1] <- delta[-1] - 2*mu*lambda*theta[-1]      
+        delta[-1] <- delta[-1] - 2*lambda*theta[-1]      
         #updating coefficients
         theta <- theta - mu*delta
         #error calculation
@@ -136,8 +138,8 @@ print(sum(predictedLabels == trainLabels)/length(trainLabels))
 
 printErrorMetrics(predictedLabels,trainLabels)
 # test the model
-data <- loadMNISTData("D:/R/mnist/t10k-images.idx3-ubyte", "D:/R/mnist/t10k-labels.idx1-ubyte")
-#data <- loadMNISTData("C:/analytics/t10k-images.idx3-ubyte", "C:/analytics/t10k-labels.idx1-ubyte")
+#data <- loadMNISTData("D:/R/mnist/t10k-images.idx3-ubyte", "D:/R/mnist/t10k-labels.idx1-ubyte")
+data <- loadMNISTData("C:/analytics/t10k-images.idx3-ubyte", "C:/analytics/t10k-labels.idx1-ubyte")
 testLabels <- data$labels
 testData <- data$data
 
@@ -147,7 +149,6 @@ print(dim(testLabels))
 #trainingLabels should have 10000x1, one class label \in {0,1,...9} for each data.
 
 predictedLabels <- testModel(classifier, testData)
-predictedLabels <- testModel(thetas, testData)
 
 #calculate accuracy
 print("accuracy on test data:\t")
